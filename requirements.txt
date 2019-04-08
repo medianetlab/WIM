@@ -1,0 +1,8 @@
+# Flaks application
+Flask
+
+# API
+flask-classful
+
+# Application Server
+gunicorn
