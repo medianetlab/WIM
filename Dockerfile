@@ -1,7 +1,7 @@
 FROM python:3.7.2
 
-RUN mkdir /tnm
-WORKDIR /thm
+RUN mkdir /app
+WORKDIR /app
 
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
