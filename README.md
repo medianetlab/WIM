@@ -1,1 +1,1 @@
-# Tranfer(Themis) Network Manager - WIM 
+# Tranfer Network Manager - WIM 
