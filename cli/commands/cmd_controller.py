@@ -19,9 +19,6 @@ def ls():
 
 	for sdn_con in controllers:
 		click.echo('{0} controller @ {1}'.format(sdn_con['type'], sdn_con['ip']))
-	# 	cmd = 'echo {0} controller @ {1}'.format(sdn_con['type'], sdn_con['ip'])
-	# 	return subprocess.call(cmd, shell=True)
-
 	
 
 cli.add_command(ls)
