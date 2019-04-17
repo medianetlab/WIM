@@ -3,7 +3,7 @@ import subprocess
 
 import click
 
-from db.my_db import controllers
+from wim.db.my_db import controllers
 
 @click.group()
 def cli():

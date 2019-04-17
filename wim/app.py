@@ -1,6 +1,6 @@
 from flask import Flask
-from wim.api.sdn import SdnView
-from wim.api.sm import SmView
+from wim.api.sbi import SdnView
+from wim.api.nbi import SmView
 
 def create_app():
     """
