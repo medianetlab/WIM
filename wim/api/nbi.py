@@ -1,5 +1,6 @@
 from flask_classful import FlaskView
 from flask import jsonify, request
+import requests
 
 from wim.sm.sm import handle_slice
 
@@ -19,4 +20,9 @@ class SmView(FlaskView):
 		Get the wsd from the SM
 		"""
 
-		return jsonify(handle_slice(request.json))
+		with open('wim/of-flows/genesis_normal','rb') as flow:
+			headers = {"Accept": "application/xml" , "Content-type" : "application/xml"}
+			r = requests.put('http://10.30.0.91:8181/restconf/config/opendaylight-inventory:nodes/node/openflow:619760387514849152/flow-node-inventory:table/0/flow/genesis_normal',
+				auth=('admin', 'admin'), data=flow, verify=False, headers=headers)
+
+		return r.content

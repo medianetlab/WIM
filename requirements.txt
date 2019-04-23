@@ -6,3 +6,6 @@ flask-classful
 
 # Application Server
 gunicorn
+
+# Python modules
+requests
