@@ -9,3 +9,6 @@ gunicorn
 
 # Python modules
 requests
+
+# Mongo databse
+PyMongo
