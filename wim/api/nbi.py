@@ -31,9 +31,9 @@ class SmView(FlaskView):
 
 
 class AddvimView(FlaskView):
-	"""
-	Class inherited by FlaskView that created the API at route /api/addvim
-	"""
+    """
+    Class inherited by FlaskView that created the API at route /api/addvim
+    """
     route_prefix = '/api/'
 
     def get(self):
