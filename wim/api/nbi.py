@@ -1,9 +1,11 @@
 from flask_classful import FlaskView
 from flask import jsonify, request
 import requests
+import json
 
 from wim.db.my_db import switches
 from wim.db import mongoUtils
+from bson.json_util import dumps
 
 class SmView(FlaskView):
 	"""
@@ -36,9 +38,15 @@ class AddvimView(FlaskView):
     """
     route_prefix = '/api/'
 
-    def get(self):
+    def post(self):
+    	"""
+    	Receives any added vim from the slice manager
+    	"""
+    	data = request.json
+    	print(type(data), flush=True)
+    	mongoUtils.col_add('vim', data)
     	return "OK"
-
+    	
 
 
 class TestView(FlaskView):
@@ -48,9 +56,7 @@ class TestView(FlaskView):
 	route_prefix = '/api/'
 	
 	def get(self):
-	    mongoUtils.col_insert('switch_col', switches)
-	    print (mongoUtils.create_index('switch_col',['dpname', 'dpid']), flush=True)
-	    result = mongoUtils.index_col('switch_col')
-	    for i in result:
-	    	print (i)
+	    # mongoUtils.col_insert('switch_col', switches)
+	    # print(mongoUtils.create_index('switch_col',['dpname', 'dpid']), flush=True)
 	    return "OK"
+
