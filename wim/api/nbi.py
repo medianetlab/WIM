@@ -25,7 +25,7 @@ class SmView(FlaskView):
 
 		with open('wim/of-flows/genesis_normal','rb') as flow:
 			headers = {"Accept": "application/xml" , "Content-type" : "application/xml"}
-			r = requests.put('http://10.30.0.91:8181/restconf/config/opendaylight-inventory:nodes/node/openflow:619760387514849152/flow-node-inventory:table/0/flow/genesis_normal',
+			r = requests.put('http://10.30.0.91:8181/restconf/config/opendaylight-inventory:nodes/node/openflow:619760387514849152/flow-node-inventory:table/1/flow/genesis_normal',
 				auth=('admin', 'admin'), data=flow, verify=False, headers=headers)
 
 		return r.content
@@ -43,7 +43,6 @@ class AddvimView(FlaskView):
     	Receives any added vim from the slice manager
     	"""
     	data = request.json
-    	print(type(data), flush=True)
     	mongoUtils.col_add('vim', data)
     	return "OK"
     	
