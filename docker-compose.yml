@@ -11,7 +11,9 @@ services:
       - ".env"
     ports:
      - "8000:8000"
+    restart: always
     volumes:
       - ".:/app"
   mongo:
     image: mongo:latest
+    restart: always
