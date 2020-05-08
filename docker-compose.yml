@@ -31,6 +31,18 @@ services:
     depends_on:
       - zookeeper
     
+  neo4j:
+    image: neo4j:3.5
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    env_file: 
+      - .env
+    volumes: 
+      - "neo4j-data:/data"
+      - "neo4j-logs:/logs"
+
   wim-nbi:
     build: ./wim-nbi
     image: wim-nbi
@@ -59,6 +71,11 @@ services:
     depends_on: 
       - kafka
       - zookeeper
+
   # mongo:
   #   image: mongo:latest
   #   restart: always
+
+volumes:
+  neo4j-logs: {}
+  neo4j-data: {}
