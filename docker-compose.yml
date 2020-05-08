@@ -1,6 +1,6 @@
 version: '3'
 services:
-  wim:
+  wim-nbi:
     build: ./wim-nbi
     image: wim-nbi
     container_name: wim-nbi
@@ -14,6 +14,13 @@ services:
     restart: always
     volumes:
       - "./wim-nbi:/wim-nbi"
+  wim-cli:
+    build: ./wim-cli
+    image: wim-cli
+    container_name: wim-cli
+    restart: always
+    stdin_open: true
+    tty: true
   # mongo:
   #   image: mongo:latest
   #   restart: always
