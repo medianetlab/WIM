@@ -57,9 +57,9 @@ services:
     restart: always
     volumes:
       - "./wim-nbi:/wim-nbi"
-    depends_on: 
-      - kafka
-      - zookeeper
+    # depends_on: 
+      # - kafka
+      # - zookeeper
     
   wim-cli:
     build: ./wim-cli

@@ -2,7 +2,7 @@
 Flask
 
 # API
-flask-classful
+flask-restful
 
 # Application Server
 gunicorn

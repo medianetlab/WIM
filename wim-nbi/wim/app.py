@@ -1,11 +1,7 @@
 from flask import Flask
+from flask_restful import Api
 
-# APIs
-from wim.api.nbi import SmView
-
-# DB elements
-from wim.db.my_db import switches
-from wim.db import mongoUtils
+from wim.resources.nodes import NodeApi, NodeListApi
 
 
 def create_app():
@@ -19,11 +15,8 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     # Register the api calls
-    SmView.register(app, trailing_slash=False)
-
-    # Initiate the db
-    # Switch db
-    # mongoUtils.col_insert("switch_col", switches)
-    # mongoUtils.create_index('switch_col',['dpname', 'dpid'])
+    api = Api(app=app, prefix="/api")
+    api.add_resource(NodeApi, "/node/<string:_id>")
+    api.add_resource(NodeListApi, "/nodes")
 
     return app
