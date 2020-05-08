@@ -117,3 +117,8 @@ dmypy.json
 
 # Mac users
 .DS_Store
+
+# Development Env
+.vscode/
+pyrightconfig.json
+dev/

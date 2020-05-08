@@ -1,19 +1,19 @@
 version: '3'
 services:
   wim:
-    build: .
+    build: ./wim-nbi
     command: >
-      gunicorn -b 0.0.0.0:8000
+      gunicorn -b 0.0.0.0:3000
         --access-logfile -
         --reload
         "wim.app:create_app()"
     env_file:
       - ".env"
     ports:
-     - "8000:8000"
+     - "3000:3000"
     restart: always
     volumes:
-      - ".:/app"
-  mongo:
-    image: mongo:latest
-    restart: always
+      - "./wim-nbi:/wim-nbi"
+  # mongo:
+  #   image: mongo:latest
+  #   restart: always
