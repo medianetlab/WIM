@@ -12,3 +12,6 @@ requests
 
 # Mongo databse
 PyMongo
+
+# neo4j graph database
+neo4j-driver

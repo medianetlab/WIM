@@ -3,13 +3,14 @@
 """
 Module that implements the resources /node and /nodes for the nbi
 """
-import json
 import logging
 
 from flask_restful import Resource, reqparse
+from flask import g
 
 from wim.db import mongoUtils
-from wim.models.models import NodeListModel, NodeModel
+from wim.models.models import NodeModel
+from wim.neo4j.nodes import NodesNeo4j
 
 
 # Create the logger
@@ -20,6 +21,14 @@ stream_formatter = logging.Formatter("%(asctime)s %(name)s %(levelname)s %(messa
 stream_handler.setFormatter(stream_formatter)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(stream_handler)
+
+
+# Create the neo4j db connection
+# username & password should be loaded from the env
+def get_neo4j_db():
+    if not hasattr(g, "neo4j_db"):
+        g.neo4j_db = NodesNeo4j(uri="bolt://neo4j", user="neo4j", password="genesis")
+    return g.neo4j_db
 
 
 class NodeApi(Resource):
@@ -96,6 +105,5 @@ class NodeListApi(Resource):
         """
         Return a list with all the switches
         """
-        # print([node for node in mongoUtils.index_col("nodes")])
-        # return ({"node_list": list(mongoUtils.index_col("nodes"))}, 200)
+        logger.debug(get_neo4j_db().print_greeting("Hello, World"))
         return list(mongoUtils.index_col("nodes")), 200

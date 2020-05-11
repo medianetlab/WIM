@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 from flask_restful import Api
 
 from wim.resources.nodes import NodeApi, NodeListApi
@@ -18,5 +18,11 @@ def create_app():
     api = Api(app=app, prefix="/api")
     api.add_resource(NodeApi, "/node/<string:_id>")
     api.add_resource(NodeListApi, "/nodes")
+
+    # Close the neo4j db connection
+    @app.teardown_appcontext
+    def close_neo4j(error):
+        if hasattr(g, "neo4j_db"):
+            g.neo4j_db.close()
 
     return app

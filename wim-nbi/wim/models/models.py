@@ -70,16 +70,3 @@ class NodeModel:
         """
         node_data = mongoUtils.get("nodes", _id)
         return cls(**node_data) if node_data else None
-
-
-class NodeListModel:
-    """
-    Modeling the list of node elements
-    """
-
-    @staticmethod
-    def get_list():
-        """
-        Get the list of Node elements from the database and return it
-        """
-        pass
