@@ -3,6 +3,7 @@
 """
 Module that implements the resources /node and /nodes for the nbi
 """
+import json
 
 from flask_restful import Resource, reqparse
 from wim.models.models import NodeModel, NodeListModel
@@ -54,14 +55,24 @@ class NodeApi(Resource):
         """
         Create or update an existing node
         """
-        return f"Put /node/{_id}", 200
+        args = self.parser.parse_args()
+        if mongoUtils.update("nodes", _id, args):
+            return (f"Updated node {_id}", 200)
+        else:
+            args["_id"] = _id
+            new_node = NodeModel(**args)
+            new_node.store_to_db()
+            return (f"Created node {_id}", 201)
 
     def delete(self, _id):
         """
         Delete an existing node from the database
         If not found, return 404 error
         """
-        return f"Delete /node/{_id}", 200
+        if mongoUtils.delete("nodes", _id):
+            return (f"Deleted node {_id}", 200)
+        else:
+            return (f"Node {_id} was not found", 404)
 
 
 class NodeListApi(Resource):
@@ -73,4 +84,6 @@ class NodeListApi(Resource):
         """
         Return a list with all the switches
         """
-        return f"All the switches"
+        # print([node for node in mongoUtils.index_col("nodes")])
+        # return ({"node_list": list(mongoUtils.index_col("nodes"))}, 200)
+        return list(mongoUtils.index_col("nodes")), 200

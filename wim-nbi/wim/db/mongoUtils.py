@@ -17,7 +17,7 @@ def index_col(collection_name):
     Returns all data of a specific collection
     """
     collection = db[collection_name]
-    return collection.find({})
+    return collection.find()
 
 
 def add(collection_name, data):
@@ -48,8 +48,7 @@ def delete(collection_name, _id):
     """
     Delete an item based on the the id
     """
-    result = db[collection_name].delete_one({"_id": _id}).deleted_count
-    return result
+    return db[collection_name].delete_one({"_id": _id}).deleted_count
 
 
 def update(collection_name, _id, json_data):
