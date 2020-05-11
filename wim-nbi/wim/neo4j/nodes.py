@@ -35,6 +35,11 @@ class NodesNeo4j:
             greeting = session.write_transaction(self._create_and_return_greeting, message)
             print(greeting)
 
+    def commit_add_node(self, node):
+        with self._driver.session() as session:
+            resutl = session.write_transaction(self._add_node, node)
+            logger.debug(resutl)
+
     @staticmethod
     def _create_and_return_greeting(tx, message):
         result = tx.run(
@@ -44,3 +49,21 @@ class NodesNeo4j:
             message=message,
         )
         return result.single()[0]
+
+    @staticmethod
+    def _add_node(tx, node):
+        query = (
+            f"CREATE ({node['_id']}:node "
+            + "{type: "
+            + node["type"]
+            + ", location: "
+            + node["location"]
+            + "})"
+        )
+        logger.debug(query)
+        tx.run(
+            "CREATE (a:node {id: $nid, type: $type, location: $location})",
+            nid=node["_id"],
+            type=node["type"],
+            location=node["location"],
+        )
