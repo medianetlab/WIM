@@ -3,7 +3,6 @@ from flask import jsonify, request
 import requests
 import json
 
-from wim.db.my_db import switches
 from wim.db import mongoUtils
 from bson.json_util import dumps
 

@@ -72,10 +72,16 @@ services:
       - kafka
       - zookeeper
 
-  # mongo:
-  #   image: mongo:latest
-  #   restart: always
+  mongo:
+    image: mongo:latest
+    container_name: wim-mongo
+    restart: always
+    volumes: 
+      - "mongo-datadb:/data/db"
+      - "mongo-configdb:/data/configdb"
 
 volumes:
   neo4j-logs: {}
   neo4j-data: {}
+  mongo-datadb: {}
+  mongo-configdb: {}
