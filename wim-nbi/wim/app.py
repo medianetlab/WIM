@@ -2,6 +2,7 @@ from flask import Flask, g
 from flask_restful import Api
 
 from wim.resources.nodes import NodeApi, NodeListApi
+from wim.resources.servers import ServerApi, ServerListApi
 
 
 def create_app():
@@ -18,6 +19,8 @@ def create_app():
     api = Api(app=app, prefix="/api")
     api.add_resource(NodeApi, "/node/<string:_id>")
     api.add_resource(NodeListApi, "/nodes")
+    api.add_resource(ServerApi, "/server/<string:_id>")
+    api.add_resource(ServerListApi, "/servers")
 
     # Close the neo4j db connection
     @app.teardown_appcontext

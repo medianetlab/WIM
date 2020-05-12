@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Module that implements the models for nodes resources
+Module that implements the models for servers resources
 """
 
 import logging
@@ -19,25 +19,24 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(stream_handler)
 
 
-class NodeModel:
+class ServerModel:
     """
-    Modeling the node elements as they enter the database
+    Modeling the server elements as they enter the database
     """
 
-    def __init__(self, _id, type, links, model=None, location=None, description=None):
+    def __init__(self, _id, links, type=None, location=None, description=None):
         self._id = _id
         self.links = links
         self._type = type
-        self.model = model
         self.location = location
         self.description = description
 
     def store_to_db(self):
         """
-        Store an node object in the database
+        Store a server object in the database
         """
         try:
-            store = mongoUtils.add("nodes", self.json())
+            store = mongoUtils.add("servers", self.json())
         except mongoUtils.dub_error:
             return None
         else:
@@ -45,13 +44,12 @@ class NodeModel:
 
     def json(self):
         """
-        Return a JSON object of the node
+        Return a JSON object of the server
         """
         return {
             "_id": self._id,
             "type": self._type,
             "links": self.links,
-            "model": self.model,
             "location": self.location,
             "description": self.description,
         }
@@ -65,8 +63,8 @@ class NodeModel:
     @classmethod
     def find_from_id(cls, _id):
         """
-        Find the Node with the given id from the DB and return the object
+        Find the server with the given id from the DB and return the object
         If not found return None
         """
-        node_data = mongoUtils.get("nodes", _id)
-        return cls(**node_data) if node_data else None
+        server_data = mongoUtils.get("servers", _id)
+        return cls(**server_data) if server_data else None

@@ -104,6 +104,6 @@ class NodeListApi(Resource):
 
     def get(self):
         """
-        Return a list with all the switches
+        Return a list with all the nodes
         """
         return list(mongoUtils.index_col("nodes")), 200
