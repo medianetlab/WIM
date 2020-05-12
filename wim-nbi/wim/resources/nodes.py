@@ -70,7 +70,7 @@ class NodeApi(Resource):
         args["_id"] = _id
         new_node = NodeModel(**args)
         store = new_node.store_to_db()
-        get_neo4j_db().commit_add_node(args)
+        get_neo4j_db().add_node(args)
         return (f"Created node {_id}", 201) if store else (f"Node {_id} already exists", 400)
 
     def put(self, _id):
@@ -106,5 +106,4 @@ class NodeListApi(Resource):
         """
         Return a list with all the switches
         """
-        logger.debug(get_neo4j_db().print_greeting("Hello, World"))
         return list(mongoUtils.index_col("nodes")), 200

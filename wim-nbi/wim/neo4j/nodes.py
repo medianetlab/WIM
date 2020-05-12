@@ -30,40 +30,29 @@ class NodesNeo4j:
         """
         self._driver.close()
 
-    def print_greeting(self, message):
+    def add_node(self, node):
+        """
+        Creates the connection and adds the Node to the graph db if it doesn't exists
+        """
         with self._driver.session() as session:
-            greeting = session.write_transaction(self._create_and_return_greeting, message)
-            print(greeting)
-
-    def commit_add_node(self, node):
-        with self._driver.session() as session:
-            resutl = session.write_transaction(self._add_node, node)
-            logger.debug(resutl)
-
-    @staticmethod
-    def _create_and_return_greeting(tx, message):
-        result = tx.run(
-            "CREATE (a:Greeting) "
-            "SET a.message = $message "
-            "RETURN a.message + ', from node ' + id(a)",
-            message=message,
-        )
-        return result.single()[0]
+            # Create the session
+            tx = session.begin_transaction()
+            # Check if the Node exists. If it doesn't, add it
+            if not self._check_if_node_exists(tx, node):
+                logger.debug("Add the node")
+                self._add_node(tx, node)
+            tx.commit()
 
     @staticmethod
     def _add_node(tx, node):
-        query = (
-            f"CREATE ({node['_id']}:node "
-            + "{type: "
-            + node["type"]
-            + ", location: "
-            + node["location"]
-            + "})"
-        )
-        logger.debug(query)
         tx.run(
-            "CREATE (a:node {id: $nid, type: $type, location: $location})",
+            "CREATE (a:nodes {id: $nid, type: $type, location: $location})",
             nid=node["_id"],
             type=node["type"],
             location=node["location"],
         )
+
+    @staticmethod
+    def _check_if_node_exists(tx, node):
+        logger.debug(f"nid = {node['_id']}")
+        return tx.run("MATCH (n:nodes) WHERE n.id = $nid RETURN n", nid=node["_id"]).single()
