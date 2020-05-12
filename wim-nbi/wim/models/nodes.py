@@ -24,9 +24,9 @@ class NodeModel:
     Modeling the node elements as they enter the database
     """
 
-    def __init__(self, _id, type, ports, model=None, location=None, description=None):
+    def __init__(self, _id, type, links, model=None, location=None, description=None):
         self._id = _id
-        self.ports = ports
+        self.links = links
         self._type = type
         self.model = model
         self.location = location
@@ -50,7 +50,7 @@ class NodeModel:
         return {
             "_id": self._id,
             "type": self._type,
-            "ports": self.ports,
+            "links": self.links,
             "model": self.model,
             "location": self.location,
             "description": self.description,

@@ -9,7 +9,7 @@ from flask_restful import Resource, reqparse
 from flask import g
 
 from wim.db import mongoUtils
-from wim.models.models import NodeModel
+from wim.models.nodes import NodeModel
 from wim.neo4j.nodes import NodesNeo4j
 
 
@@ -45,7 +45,7 @@ class NodeApi(Resource):
         help="Define the type of the node (SDN, Traditional)",
         choices=("SDN", "Traditional"),
     )
-    parser.add_argument("ports", type=dict, required=True, help="Define the links of the device")
+    parser.add_argument("links", type=dict, required=True, help="Define the links of the device")
     parser.add_argument("model", type=str, required=False, help="Define the model of the device")
     parser.add_argument(
         "location", type=str, required=False, help="Define the location of the device"

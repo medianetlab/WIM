@@ -38,9 +38,12 @@ class NodesNeo4j:
             # Create the session
             tx = session.begin_transaction()
             # Check if the Node exists. If it doesn't, add it
-            if not self._check_if_node_exists(tx, node):
-                logger.debug("Add the node")
+            if not self._check_if_node_exists(tx, node["_id"]):
                 self._add_node(tx, node)
+                for link in node["links"].values():
+                    if self._check_if_node_exists(tx, link["dest"]):
+                        # Add the link to the existing node
+                        self._add_link(tx, node["_id"], link["dest"], link["weight"])
             tx.commit()
 
     @staticmethod
@@ -53,6 +56,15 @@ class NodesNeo4j:
         )
 
     @staticmethod
-    def _check_if_node_exists(tx, node):
-        logger.debug(f"nid = {node['_id']}")
-        return tx.run("MATCH (n:nodes) WHERE n.id = $nid RETURN n", nid=node["_id"]).single()
+    def _check_if_node_exists(tx, node_id):
+        return tx.run("MATCH (n:nodes) WHERE n.id = $nid RETURN n", nid=node_id).single()
+
+    @staticmethod
+    def _add_link(tx, src_id, dst_id, weight):
+        tx.run(
+            "MATCH (a:nodes), (b:nodes) WHERE a.id = $src_id AND b.id = $dst_id"
+            " CREATE (a)-[c:connected {weight: $weight}]->(b)",
+            src_id=src_id,
+            dst_id=dst_id,
+            weight=weight,
+        )
