@@ -10,6 +10,7 @@ from flask import g
 
 from wim.db import mongoUtils
 from wim.models.servers import ServerModel
+from wim.neo4j.servers import ServersNeo4j
 
 
 # Create the logger
@@ -24,10 +25,10 @@ logger.addHandler(stream_handler)
 
 # Create the neo4j db connection
 # username & password should be loaded from the env
-# def get_neo4j_db():
-#     if not hasattr(g, "neo4j_db"):
-#         g.neo4j_db = NodesNeo4j(uri="bolt://neo4j", user="neo4j", password="genesis")
-#     return g.neo4j_db
+def get_neo4j_db():
+    if not hasattr(g, "neo4j_db"):
+        g.neo4j_db = ServersNeo4j(uri="bolt://neo4j", user="neo4j", password="genesis")
+    return g.neo4j_db
 
 
 class ServerApi(Resource):
@@ -68,8 +69,11 @@ class ServerApi(Resource):
         args["_id"] = _id
         new_server = ServerModel(**args)
         store = new_server.store_to_db()
-        # get_neo4j_db().add_node(args)
-        return (f"Created server {_id}", 201) if store else (f"Server {_id} already exists", 400)
+        if not store:
+            return (f"Server {_id} already exists", 400)
+        else:
+            get_neo4j_db().add_server(args)
+            return (f"Created server {_id}", 201)
 
     def put(self, _id):
         """

@@ -1,6 +1,11 @@
-import os
+# -*- coding: utf-8 -*-
+
+"""
+Module that implements the functions for the interaction with the neo4j db from the /node API
+"""
+
 import logging
-from neo4j import GraphDatabase, basic_auth
+from wim.neo4j.base import BaseNeo4j
 
 
 # Create the logger
@@ -13,22 +18,10 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(stream_handler)
 
 
-class NodesNeo4j:
+class NodesNeo4j(BaseNeo4j):
     """
     Class that models the neo4j functionalities
     """
-
-    def __init__(self, uri, user, password):
-        """
-        Create the database driver connection
-        """
-        self._driver = GraphDatabase.driver(uri, auth=basic_auth(user, password))
-
-    def close(self):
-        """
-        Run the database driver connection
-        """
-        self._driver.close()
 
     def add_node(self, node):
         """

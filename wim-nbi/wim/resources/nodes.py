@@ -3,6 +3,7 @@
 """
 Module that implements the resources /node and /nodes for the nbi
 """
+
 import logging
 
 from flask_restful import Resource, reqparse
