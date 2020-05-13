@@ -4,6 +4,7 @@
 Module that implements the resources /server and /servers for the nbi
 """
 import logging
+import os
 
 from flask_restful import Resource, reqparse
 from flask import g
@@ -25,10 +26,15 @@ logger.addHandler(stream_handler)
 
 
 # Create the neo4j db connection
-# username & password should be loaded from the env
+neo4j_auth = os.getenv("NEO4J_AUTH")
+if not neo4j_auth:
+    raise ValueError("NEO4J_AUTH variable is not defined")
+username, password = neo4j_auth.split("/")
+
+
 def get_neo4j_db():
     if not hasattr(g, "neo4j_db"):
-        g.neo4j_db = ServersNeo4j(uri="bolt://neo4j", user="neo4j", password="genesis")
+        g.neo4j_db = ServersNeo4j(uri="bolt://neo4j", user=username, password=password)
     return g.neo4j_db
 
 

@@ -53,7 +53,9 @@ services:
         --reload
         "wim.app:create_app()"
     ports:
-     - "3000:3000"
+      - "3000:3000"
+    env_file: 
+      - .env
     restart: always
     volumes:
       - "./wim-nbi:/wim-nbi"
