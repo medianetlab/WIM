@@ -58,8 +58,8 @@ class ServerApi(Resource):
         Find the server from the database based on the id and return it
         If not found, return 404 error
         """
-        server = ServerModel.find_from_id(_id)
-        return (server.json(), 200) if server else (f"Server {_id} was not found", 404)
+        server = get_neo4j_db().get_server(_id)
+        return (server, 200) if server else (f"Server {_id} was not found", 404)
 
     def post(self, _id):
         """
@@ -67,25 +67,21 @@ class ServerApi(Resource):
         """
         args = self.parser.parse_args()
         args["_id"] = _id
-        new_server = ServerModel(**args)
-        store = new_server.store_to_db()
-        if not store:
-            return (f"Server {_id} already exists", 400)
-        else:
-            get_neo4j_db().add_server(args)
-            return (f"Created server {_id}", 201)
+        new_server = get_neo4j_db().add_server(args)
+        return (
+            (f"Created server {_id}", 201) if new_server else (f"Server {_id} already exists", 400)
+        )
 
     def put(self, _id):
         """
         Create or update an existing server
         """
         args = self.parser.parse_args()
-        if mongoUtils.update("servers", _id, args):
+        if get_neo4j_db().update_server(_id, args):
             return (f"Updated server {_id}", 200)
         else:
             args["_id"] = _id
-            new_server = ServerModel(**args)
-            new_server.store_to_db()
+            get_neo4j_db().add_server(args)
             return (f"Created server {_id}", 201)
 
     def delete(self, _id):
@@ -93,7 +89,7 @@ class ServerApi(Resource):
         Delete an existing server from the database
         If not found, return 404 error
         """
-        if mongoUtils.delete("servers", _id):
+        if get_neo4j_db().delete_server(_id):
             return (f"Deleted server {_id}", 200)
         else:
             return (f"Server {_id} was not found", 404)
@@ -108,4 +104,4 @@ class ServerListApi(Resource):
         """
         Return a list with all the servers
         """
-        return list(mongoUtils.index_col("servers")), 200
+        return get_neo4j_db().get_all_servers(), 200

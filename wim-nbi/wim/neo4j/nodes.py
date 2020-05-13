@@ -28,9 +28,7 @@ class NodesNeo4j(BaseNeo4j):
         Creates the connection and adds the node to the graph db if it doesn't exists
         """
         with self._driver.session() as session:
-            # Create the session
             tx = session.begin_transaction()
-            # Check if the Node exists. If it doesn't, add it
             if not self._check_if_node_exists(tx, node["_id"]):
                 self._add_node(tx, node)
                 for dest, link in node["links"].items():
@@ -73,7 +71,7 @@ class NodesNeo4j(BaseNeo4j):
             tx = session.begin_transaction()
             if not self._update_node_params(tx, node_id, node):
                 tx.commit()
-                return 0
+                return None
             else:
                 # Update the links of the Node
                 self._delete_node_links(tx, node_id)
@@ -89,11 +87,11 @@ class NodesNeo4j(BaseNeo4j):
         """
         with self._driver.session() as session:
             tx = session.begin_transaction()
-            delete_node = tx.run(
-                "MATCH (n:nodes {id: $nid}) DELETE n RETURN n", nid=node_id
+            result = tx.run(
+                "MATCH (n:nodes {id: $nid}) DETACH DELETE n RETURN n", nid=node_id
             ).single()
             tx.commit()
-            return delete_node
+            return result
 
     @staticmethod
     def _add_node(tx, node):
