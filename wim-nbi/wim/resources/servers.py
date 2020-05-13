@@ -8,6 +8,7 @@ import logging
 from flask_restful import Resource, reqparse
 from flask import g
 
+# Mongo DB and models have been replaced by neo4j db
 from wim.db import mongoUtils
 from wim.models.servers import ServerModel
 from wim.neo4j.servers import ServersNeo4j
