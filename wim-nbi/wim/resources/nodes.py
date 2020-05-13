@@ -70,22 +70,19 @@ class NodeApi(Resource):
         """
         args = self.parser.parse_args()
         args["_id"] = _id
-        new_node = NodeModel(**args)
-        store = new_node.store_to_db()
-        get_neo4j_db().add_node(args)
-        return (f"Created node {_id}", 201) if store else (f"Node {_id} already exists", 400)
+        new_node = get_neo4j_db().add_node(args)
+        return (f"Created node {_id}", 201) if new_node else (f"Node {_id} already exists", 400)
 
     def put(self, _id):
         """
         Create or update an existing node
         """
         args = self.parser.parse_args()
-        if mongoUtils.update("nodes", _id, args):
+        if get_neo4j_db().update_node(_id, args):
             return (f"Updated node {_id}", 200)
         else:
             args["_id"] = _id
-            new_node = NodeModel(**args)
-            new_node.store_to_db()
+            get_neo4j_db().add_node(args)
             return (f"Created node {_id}", 201)
 
     def delete(self, _id):
@@ -93,7 +90,7 @@ class NodeApi(Resource):
         Delete an existing node from the database
         If not found, return 404 error
         """
-        if mongoUtils.delete("nodes", _id):
+        if get_neo4j_db().delete_node(_id):
             return (f"Deleted node {_id}", 200)
         else:
             return (f"Node {_id} was not found", 404)

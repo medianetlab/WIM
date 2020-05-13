@@ -25,7 +25,7 @@ class NodesNeo4j(BaseNeo4j):
 
     def add_node(self, node):
         """
-        Creates the connection and adds the Node to the graph db if it doesn't exists
+        Creates the connection and adds the node to the graph db if it doesn't exists
         """
         with self._driver.session() as session:
             # Create the session
@@ -36,7 +36,10 @@ class NodesNeo4j(BaseNeo4j):
                 for dest, link in node["links"].items():
                     # Add the link to the existing node
                     self._add_link(tx, node["_id"], dest, link)
-            tx.commit()
+                tx.commit()
+                return 201
+            else:
+                return 0
 
     def get_node(self, node_id):
         """
@@ -64,9 +67,33 @@ class NodesNeo4j(BaseNeo4j):
 
     def update_node(self, node_id, node):
         """
-        Updates an existing Node
+        Updates an existing node
         """
-        pass
+        with self._driver.session() as session:
+            tx = session.begin_transaction()
+            if not self._update_node_params(tx, node_id, node):
+                tx.commit()
+                return 0
+            else:
+                # Update the links of the Node
+                self._delete_node_links(tx, node_id)
+                for dest, link in node["links"].items():
+                    # Add the link to the existing node
+                    self._add_link(tx, node_id, dest, link)
+                tx.commit()
+                return 200
+
+    def delete_node(self, node_id):
+        """
+        Deletes an existing node
+        """
+        with self._driver.session() as session:
+            tx = session.begin_transaction()
+            delete_node = tx.run(
+                "MATCH (n:nodes {id: $nid}) DELETE n RETURN n", nid=node_id
+            ).single()
+            tx.commit()
+            return delete_node
 
     @staticmethod
     def _add_node(tx, node):
@@ -101,3 +128,22 @@ class NodesNeo4j(BaseNeo4j):
             tx.run("MATCH (a:nodes {id: $node_id}) -[c]- (d:nodes) RETURN d, c", node_id=node_id)
         )
         return {dest["id"]: dict(link) for (dest, link) in [tuple(r) for r in link_list]}
+
+    @staticmethod
+    def _delete_node_links(tx, node_id):
+        return tx.run(
+            "MATCH (a:nodes {id: $node_id}) -[c]- (d:nodes) DELETE c RETURN a", node_id=node_id
+        ).single()
+
+    @staticmethod
+    def _update_node_params(tx, node_id, node):
+        """Update the Node parameters"""
+        return tx.run(
+            "MATCH (n:nodes {id: $nid}) "
+            "SET n = { id: $nid, type: $type, location: $loc, description: $des } "
+            "RETURN n",
+            nid=node_id,
+            type=node["type"],
+            loc=node["location"],
+            des=node["description"],
+        ).single()
