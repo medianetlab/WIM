@@ -60,8 +60,9 @@ class NodeApi(Resource):
         Find the node from the database based on the id and return it
         If not found, return 404 error
         """
-        node = NodeModel.find_from_id(_id)
-        return (node.json(), 200) if node else (f"Node {_id} was not found", 404)
+        # node = NodeModel.find_from_id(_id)
+        node = get_neo4j_db().get_node(_id)
+        return (node, 200) if node else (f"Node {_id} was not found", 404)
 
     def post(self, _id):
         """
@@ -107,4 +108,4 @@ class NodeListApi(Resource):
         """
         Return a list with all the nodes
         """
-        return list(mongoUtils.index_col("nodes")), 200
+        return (get_neo4j_db().get_all_nodes(), 200)
