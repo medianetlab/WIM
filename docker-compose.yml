@@ -59,10 +59,21 @@ services:
     restart: always
     volumes:
       - "./wim-nbi:/wim-nbi"
-    # depends_on: 
-      # - kafka
-      # - zookeeper
+    depends_on: 
+      - kafka
+      - zookeeper
     
+  wim-mngr:
+    build: ./wim-mngr
+    image: wim-mngr
+    container_name: wim-mngr
+    restart: always
+    stdin_open: true
+    tty: true
+    depends_on: 
+      - kafka
+      - zookeeper
+
   wim-cli:
     build: ./wim-cli
     image: wim-cli

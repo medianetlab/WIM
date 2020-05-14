@@ -1,0 +1,5 @@
+# Mongo databse
+PyMongo
+
+# Kafka message bus
+kafka-python
