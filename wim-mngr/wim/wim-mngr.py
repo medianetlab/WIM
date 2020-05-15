@@ -7,10 +7,9 @@ Module that the base WIM manager process. It creates a KAFKA consumer
 """
 
 import logging
-import time
 
-from kafka import KafkaConsumer
-
+from wim.utils.kafkaUtils import create_consumer, create_topic
+from wim.utils.sliceUtils import create_slice
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -26,8 +25,16 @@ def start_manager():
     """
     Creates and starts the KAFKA consumer
     """
-    logger.debug("WIM MANAGER HERE")
-    time.sleep(360)
+    # Create the topic
+    create_topic("slice")
+
+    # Create the consumer
+    consumer = create_consumer("slice")
+
+    # Wait for messages
+    for message in consumer:
+        if message.value["action"] == "Create":
+            create_slice()
 
 
 if __name__ == "__main__":

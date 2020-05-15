@@ -6,6 +6,7 @@ WORKDIR /wim
 COPY ./requirements.txt .
 RUN pip install --upgrade -r requirements.txt
 
-COPY ./wim /wim
+COPY . /wim
+ENV PYTHONPATH=/wim
 
-CMD python ./wim-mngr.py
+CMD python ./wim/wim-mngr.py
