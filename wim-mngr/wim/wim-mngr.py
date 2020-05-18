@@ -26,14 +26,15 @@ def start_manager():
     Creates and starts the KAFKA consumer
     """
     # Create the topic
-    create_topic("slice")
+    create_topic("wan-slice")
 
     # Create the consumer
-    consumer = create_consumer("slice")
+    consumer = create_consumer("wan-slice")
 
     # Wait for messages
     for message in consumer:
-        if message.value["action"] == "Create":
+        logger.debug("New Message")
+        if message.value["action"] == "create":
             create_slice()
 
 
