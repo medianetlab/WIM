@@ -2,7 +2,7 @@ version: '3'
 
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.3.2
+    image: confluentinc/cp-zookeeper:5.4.2
     container_name: wim-zookeeper
     hostname: zookeeper
     ports:
@@ -12,9 +12,13 @@ services:
         ZOO_SERVERS: server.1=zookeeper:2888:3888
         ZOOKEEPER_CLIENT_PORT: 2181
     restart: always
+    volumes:
+      - zk-data:/var/lib/zookeeper/data
+      - zk-log:/var/lib/zookeeper/log
+      - zk-secrets:/etc/zookeeper/secrets
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.3.2
+    image: confluentinc/cp-enterprise-kafka:5.4.2
     container_name: wim-kafka
     hostname: wim
     ports:
@@ -28,6 +32,9 @@ services:
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     restart: always
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+      - kafka-secrets:/etc/kafka/secrets
     depends_on:
       - zookeeper
     
@@ -98,3 +105,8 @@ volumes:
   neo4j-data: {}
   mongo-datadb: {}
   mongo-configdb: {}
+  zk-data: {}
+  zk-log: {}
+  zk-secrets: {}
+  kafka-data: {}
+  kafka-secrets: {}

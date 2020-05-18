@@ -33,7 +33,6 @@ def start_manager():
 
     # Wait for messages
     for message in consumer:
-        logger.debug("New Message")
         if message.value["action"] == "create":
             create_slice()
 
