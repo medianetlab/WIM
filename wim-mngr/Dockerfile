@@ -1,12 +1,12 @@
 FROM python:3.7-slim
 
-RUN mkdir -p /wim
-WORKDIR /wim
+RUN mkdir -p /wim-mngr
+WORKDIR /wim-mngr
 
 COPY ./requirements.txt .
 RUN pip install --upgrade -r requirements.txt
 
-COPY . /wim
-ENV PYTHONPATH=/wim
+COPY . /wim-mngr
+ENV PYTHONPATH=/wim-mngr
 
 CMD python ./wim/wim-mngr.py

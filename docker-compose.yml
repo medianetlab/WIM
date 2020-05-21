@@ -77,6 +77,8 @@ services:
     restart: always
     stdin_open: true
     tty: true
+    volumes:
+      - "./wim-mngr:/wim-mngr"
     depends_on: 
       - kafka
       - zookeeper
