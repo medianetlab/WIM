@@ -5,10 +5,10 @@ Module that implements the resources /slice and /slices for the nbi
 """
 
 import logging
-import uuid
+from bson.json_util import dumps
 
 from flask_restful import Resource
-from flask import request
+from flask import request, jsonify
 
 # Mongo DB and models have been replaced by neo4j db
 from wim.utils import mongoUtils, kafkaUtils
@@ -75,5 +75,4 @@ class SliceListApi(Resource):
         Return a list with all the slices
         """
         slice_list = list(mongoUtils.index_col("slice"))
-        logger.debug(slice_list)
         return slice_list, 200
