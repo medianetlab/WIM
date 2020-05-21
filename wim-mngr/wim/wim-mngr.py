@@ -34,7 +34,7 @@ def start_manager():
     # Wait for messages
     for message in consumer:
         if message.value["action"] == "create":
-            create_slice()
+            create_slice(message.value["data"])
 
 
 if __name__ == "__main__":
