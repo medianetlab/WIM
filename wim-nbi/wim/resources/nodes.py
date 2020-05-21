@@ -11,8 +11,6 @@ from flask_restful import Resource, reqparse
 from flask import g
 
 # Mongo DB and models have been replaced by neo4j
-from wim.db import mongoUtils
-from wim.models.nodes import NodeModel
 from wim.neo4j.nodes import NodesNeo4j
 
 
