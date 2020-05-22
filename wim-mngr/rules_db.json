@@ -1,16 +1,16 @@
 [
     {
         "_id": "minilab-core",
-        "source": "minilab-cloud",
-        "destination": "minilab",
-        "rule": "rule1",
+        "source": "demokritos",
+        "dest": "cosmote",
+        "rule": "hello.sh",
         "qos_level": 3
     },
     {
-        "_id": "core-cosmote",
-        "source": "mnl-cloud",
-        "destination": "cosmote ",
-        "rule": "rule2",
+        "_id": "cosmote",
+        "source": "cosmote",
+        "dest": "demokritos",
+        "rule": "hello.sh",
         "qos_level": 5
     }
 ]

@@ -58,7 +58,7 @@ class SliceApi(Resource):
         _slice = mongoUtils.get("slice", _id)
         if _slice:
             producer = kafkaUtils.create_producer()
-            wim_message = {"action": "delete", "data": _id}
+            wim_message = {"action": "terminate", "data": _id}
             producer.send("wan-slice", value=wim_message)
             return (f"Terrminating Slice {_id}", 200)
         else:
