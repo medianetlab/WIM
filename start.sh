@@ -1,22 +1,40 @@
 #!/bin/bash
 
+# Check for help option
+if [[ " $@ " =~ " -h " ]] || [[ " $@ " =~ " --help " ]];
+then
+    printf "Usage:\n\tstart.sh [-p | --publish] [-h | --help]\nOptions:
+    \t[-p | --publish] : Expose Kafka using WIM public IP
+    \t[-h | --help] : Print this message and quit\n"
+    exit 0
+fi
+
 # Get the options
 while [[ $# -gt 0 ]]
 do
-    key=$1
+key=$1
 
-    case $key in
-    -p | --publish)
-        read -p "Expose Kafka Message Bus? (Y/n) " ans
+case $key in
+-p | --publish)
+read -p "Expose Kafka Message Bus? (Y/n) " ans
 
-        if [[ $ans != "n" ]];
-        then
-            read -p "WIM host public IP > " HOST_IP
-            export "DOCKER_HOST_IP=${HOST_IP}"
-        fi
-        shift
-    esac
+if [[ $ans != "n" ]];
+then
+    ip_list=$(hostname -I 2> /dev/null)
+    read -p "WIM host public IP (Available: $ip_list) >> " HOST_IP
+    export "DOCKER_HOST_IP=${HOST_IP}"
+fi
+shift
+;;
+*)
+printf "Wrong option $key\n----------\n"
+printf "Usage:\n\tstart.sh [-p | --publish] [-h | --help]\nOptions:
+\t[-p | --publish] : Expose Kafka using WIM public IP
+\t[-h | --help] : Print this message and quit\n"
+exit 9999
+;;
+esac
 
 done
 
-docker-compose up --build -d
+echo docker-compose up --build -d
