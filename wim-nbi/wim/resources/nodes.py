@@ -49,7 +49,7 @@ class NodeApi(Resource):
         type=str,
         required=True,
         help="Define the type of the node (SDN, Traditional)",
-        choices=("SDN", "Traditional"),
+        choices=("sdn", "switch", "router", "wan_emulator"),
     )
     parser.add_argument("links", type=dict, required=True, help="Define the links of the device")
     parser.add_argument("model", type=str, required=False, help="Define the model of the device")
