@@ -31,9 +31,9 @@ class NodesNeo4j(BaseNeo4j):
             tx = session.begin_transaction()
             if not self._check_if_node_exists(tx, node["_id"]):
                 self._add_node(tx, node)
-                for dest, link in node["links"].items():
+                for port, link in node["links"].items():
                     # Add the link to the existing node
-                    self._add_link(tx, node["_id"], dest, link)
+                    self._add_link(tx, node["_id"], port, link)
                 tx.commit()
                 return 201
             else:
@@ -75,9 +75,9 @@ class NodesNeo4j(BaseNeo4j):
             else:
                 # Update the links of the Node
                 self._delete_node_links(tx, node_id)
-                for dest, link in node["links"].items():
+                for port, link in node["links"].items():
                     # Add the link to the existing node
-                    self._add_link(tx, node_id, dest, link)
+                    self._add_link(tx, node_id, port, link)
                 tx.commit()
                 return 200
 
@@ -110,15 +110,15 @@ class NodesNeo4j(BaseNeo4j):
         return tx.run("MATCH (n:nodes) WHERE n.id = $nid RETURN n", nid=node_id).single()
 
     @staticmethod
-    def _add_link(tx, src_id, dst_id, link):
+    def _add_link(tx, src_id, port, link):
         tx.run(
             "MATCH (a:nodes), (b:nodes) WHERE a.id = $src_id AND b.id = $dst_id"
             " CREATE (a)-[c:connected {weight: $weight,"
             " src_port: $src_port, dst_port: $dst_port}]->(b)",
             src_id=src_id,
-            dst_id=dst_id,
+            dst_id=link["dst"],
             weight=link["weight"],
-            src_port=link["src_port"],
+            src_port=port,
             dst_port=link["dst_port"],
         )
 
