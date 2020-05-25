@@ -34,10 +34,10 @@ class ServersNeo4j(BaseNeo4j):
                 return 0
             else:
                 self._add_server(tx, server)
-                for dest, link in server["links"].items():
-                    if self._check_if_node_exists(tx, dest):
+                for port, link in server["links"].items():
+                    if self._check_if_node_exists(tx, link["dst"]):
                         # Add the link to the existing node
-                        self._add_link(tx, server["_id"], dest, link)
+                        self._add_link(tx, server["_id"], port, link)
                 tx.commit()
                 return 201
 
@@ -79,10 +79,10 @@ class ServersNeo4j(BaseNeo4j):
                 # Update the links
                 # Delete the links
                 tx.run("MATCH (s:servers {id: $sid}) -[c]- (n:nodes) DELETE c", sid=server_id)
-                for dest, link in server["links"].items():
-                    if self._check_if_node_exists(tx, dest):
+                for port, link in server["links"].items():
+                    if self._check_if_node_exists(tx, link["dst"]):
                         # Add the link to the existing node
-                        self._add_link(tx, server_id, dest, link)
+                        self._add_link(tx, server_id, port, link)
                 tx.commit()
                 return 200
 
@@ -112,13 +112,13 @@ class ServersNeo4j(BaseNeo4j):
         return tx.run("MATCH (n:nodes) WHERE n.id = $nid RETURN n", nid=node_id).single()
 
     @staticmethod
-    def _add_link(tx, src_id, dst_id, link):
+    def _add_link(tx, src_id, port, link):
         tx.run(
             "MATCH (a:servers), (b:nodes) WHERE a.id = $src_id AND b.id = $dst_id"
             " CREATE (a)-[c:connected {src_port: $src_port, dst_port: $dst_port}]->(b)",
             src_id=src_id,
-            dst_id=dst_id,
-            src_port=link["src_port"],
+            dst_id=link["dst"],
+            src_port=port,
             dst_port=link["dst_port"],
         )
 
@@ -127,7 +127,10 @@ class ServersNeo4j(BaseNeo4j):
         link_list = list(
             tx.run("MATCH (s:servers {id: $sid}) -[c]- (d:nodes) RETURN d, c", sid=sid)
         )
-        return {dest["id"]: dict(link) for dest, link in [tuple(c) for c in link_list]}
+        return {
+            link["src_port"]: {"dst": dest["id"], "dst_port": link["dst_port"]}
+            for dest, link in [tuple(c) for c in link_list]
+        }
 
     @staticmethod
     def _update_server_params(tx, sid, server):

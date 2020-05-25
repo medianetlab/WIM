@@ -127,7 +127,14 @@ class NodesNeo4j(BaseNeo4j):
         link_list = list(
             tx.run("MATCH (a:nodes {id: $node_id}) -[c]- (d:nodes) RETURN d, c", node_id=node_id)
         )
-        return {dest["id"]: dict(link) for (dest, link) in [tuple(r) for r in link_list]}
+        return {
+            link["src_port"]: {
+                "dest": dest["id"],
+                "dest_port": link["dst_port"],
+                "weight": link["weight"],
+            }
+            for (dest, link) in [tuple(r) for r in link_list]
+        }
 
     @staticmethod
     def _delete_node_links(tx, node_id):
