@@ -3,3 +3,6 @@ PyMongo
 
 # Kafka message bus
 kafka-python
+
+# neo4j graph database
+neo4j-driver
