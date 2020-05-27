@@ -57,7 +57,13 @@ class NodeApi(Resource):
         "location", type=str, required=False, help="Define the location of the device"
     )
     parser.add_argument(
-        "description", type=str, required=False, help="Define the description of the device"
+        "sdn_controller",
+        type=str,
+        required=False,
+        help="Define the SDN controller which is connected to the switch",
+    )
+    parser.add_argument(
+        "dpid", type=str, required=False, help="Datapath ID of the switch the switch"
     )
 
     def get(self, _id):

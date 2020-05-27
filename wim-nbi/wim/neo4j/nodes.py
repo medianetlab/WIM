@@ -97,12 +97,13 @@ class NodesNeo4j(BaseNeo4j):
     def _add_node(tx, node):
         tx.run(
             f"CREATE (a:nodes:{node['type']} "
-            "{id: $nid, model: $model, location: $loc, description: $des})",
+            "{id: $nid, model: $model, location: $loc, sdn_controller: $ctl, dpid: $dpid} )",
             nid=node["_id"],
             type=node["type"],
             loc=node["location"],
-            des=node["description"],
+            ctl=node["sdn_controller"],
             model=node["model"],
+            dpid=node["dpid"],
         )
 
     @staticmethod
@@ -147,10 +148,12 @@ class NodesNeo4j(BaseNeo4j):
         """Update the Node parameters"""
         return tx.run(
             "MATCH (n:nodes {id: $nid}) "
-            "SET n = { id: $nid, model: $model, location: $loc, description: $des } "
+            "SET n = "
+            "{ id: $nid, model: $model, location: $loc, sdn_controller: $ctl, dpid: $dpid } "
             "RETURN n",
             nid=node_id,
             model=node["model"],
             loc=node["location"],
-            des=node["description"],
+            ctl=node["sdn_controller"],
+            dpid=node["dpid"],
         ).single()
