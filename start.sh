@@ -37,4 +37,10 @@ esac
 
 done
 
+# Check if .env file exists - If not create it
+if [ ! -f .env ];
+then
+echo "NEO4J_AUTH=neo4j/neo4j" > .env
+fi
+
 docker-compose up --build -d

@@ -16,3 +16,5 @@ WIM is used as the WAN Infrastructure Manager for SDN Networks, interacting with
 ```
 
 * __-p | --publish__ : Expose Kafka Message Bus to external components
+
+> Before you start the wim, make sure to create a .env file containing a variable with the credentials for the Neo4j database, in the form `NEO4J_AUTH=username/password`. If no such file is created, the default username/passwords will be used (neo4j/neo4j)
