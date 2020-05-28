@@ -1,6 +1,7 @@
 FROM python:3.7-slim
 
 RUN mkdir -p /wim-mngr
+RUN apt update && apt install curl -y
 WORKDIR /wim-mngr
 
 COPY ./requirements.txt .
