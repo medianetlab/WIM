@@ -1,0 +1,32 @@
+{
+    "flow": {
+        "instructions": {
+            "instruction": {
+                "order": "0",
+                "apply-actions": {
+                    "action": {
+                        "order": "0",
+                        "output-action": {
+                            "output-node-connector": 3
+                        }
+                    }
+                }
+            }
+        },
+        "match": {
+            "in-port": 2,
+            "ethernet-match": {
+                "ethernet-type": {
+                    "type": 2054
+                }
+            }
+        },
+        "table_id": "60",
+        "id": "arp2",
+        "hard-timeout": "0",
+        "idle-timeout": "0",
+        "flow-name": "arp2",
+        "priority": "100",
+        "barrier": "false"
+    }
+}

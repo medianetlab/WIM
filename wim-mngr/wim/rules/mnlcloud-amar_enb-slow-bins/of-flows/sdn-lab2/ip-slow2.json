@@ -1,0 +1,33 @@
+{
+    "flow": {
+        "instructions": {
+            "instruction": {
+                "order": "0",
+                "apply-actions": {
+                    "action": {
+                        "order": "0",
+                        "output-action": {
+                            "output-node-connector": 4
+                        }
+                    }
+                }
+            }
+        },
+        "match": {
+            "in-port": 2,
+            "ipv4-destination": "10.2.1.11/32",
+            "ethernet-match": {
+                "ethernet-type": {
+                    "type": 2048
+                }
+            }
+        },
+        "table_id": "60",
+        "id": "ip-slow2",
+        "hard-timeout": "0",
+        "idle-timeout": "0",
+        "flow-name": "ip-slow2",
+        "priority": "50",
+        "barrier": "false"
+    }
+}

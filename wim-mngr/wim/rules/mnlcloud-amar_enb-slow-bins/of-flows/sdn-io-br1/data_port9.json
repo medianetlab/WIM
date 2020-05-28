@@ -1,0 +1,27 @@
+{
+    "flow": {
+        "instructions": {
+            "instruction": {
+                "order": "0",
+                "apply-actions": {
+                    "action": {
+                        "order": "0",
+                        "output-action": {
+                            "output-node-connector": 10
+                        }
+                    }
+                }
+            }
+        },
+        "match": {
+            "in-port": 9
+        },
+        "table_id": "0",
+        "id": "p9to10",
+        "hard-timeout": "0",
+        "idle-timeout": "0",
+        "flow-name": "p9to10",
+        "priority": "100",
+        "barrier": "false"
+    }
+}

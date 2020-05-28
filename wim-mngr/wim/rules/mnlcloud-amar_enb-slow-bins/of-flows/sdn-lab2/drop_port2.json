@@ -1,0 +1,13 @@
+{
+    "flow": {
+        "match": {
+            "in-port": 2
+        },
+        "table_id": "60",
+        "id": "drop2",
+        "hard-timeout": "0",
+        "idle-timeout": "0",
+        "flow-name": "drop2",
+        "priority": "1"
+    }
+}

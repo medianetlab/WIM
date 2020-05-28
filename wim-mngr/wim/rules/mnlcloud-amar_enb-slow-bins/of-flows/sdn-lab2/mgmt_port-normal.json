@@ -1,0 +1,29 @@
+{
+    "flow": {
+        "instructions": {
+            "instruction": {
+                "order": "0",
+                "apply-actions": {
+                    "action": {
+                        "order": "0",
+                        "output-action": {
+                            "output-node-connector": "NORMAL"
+                        }
+                    }
+                }
+            }
+        },
+        "match": {
+            "in-port": 1
+        },
+        "table_id": "60",
+        "id": "mgmt",
+        "cookie_mask": "30",
+        "hard-timeout": "0",
+        "cookie": "30",
+        "idle-timeout": "0",
+        "flow-name": "mgmt-normal",
+        "priority": "60000",
+        "barrier": "false"
+    }
+}

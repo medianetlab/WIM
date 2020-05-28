@@ -53,7 +53,6 @@ class ServersNeo4j(BaseNeo4j):
                 return None
             else:
                 result = dict(server.value())
-                logger.debug(result)
                 result["links"] = self._get_server_link(tx, server_id)
                 return result
 

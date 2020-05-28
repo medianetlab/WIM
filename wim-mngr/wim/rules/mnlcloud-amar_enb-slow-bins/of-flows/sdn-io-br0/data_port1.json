@@ -1,0 +1,27 @@
+{
+    "flow": {
+        "instructions": {
+            "instruction": {
+                "order": "0",
+                "apply-actions": {
+                    "action": {
+                        "order": "0",
+                        "output-action": {
+                            "output-node-connector": 2
+                        }
+                    }
+                }
+            }
+        },
+        "match": {
+            "in-port": 1
+        },
+        "table_id": "0",
+        "id": "p1to2",
+        "hard-timeout": "0",
+        "idle-timeout": "0",
+        "flow-name": "p1to2",
+        "priority": "100",
+        "barrier": "false"
+    }
+}
