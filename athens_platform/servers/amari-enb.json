@@ -1,0 +1,11 @@
+{
+    "type": "PNF",
+    "model": "Workstation",
+    "links": {
+        "eno1": {
+            "dst": "sdn-lab2",
+            "dst_port": 3
+        }
+    },
+    "location": "NCSRD - Callisto Rack"
+}

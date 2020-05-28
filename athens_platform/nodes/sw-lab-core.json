@@ -1,0 +1,12 @@
+{
+    "type": "router",
+    "model": "DELL S4048-ON",
+    "links": {
+        "30": {
+            "dst": "sdn-lab1",
+            "dst_port": 1,
+            "weight": 1
+        }
+    },
+    "location": "NCSRD - Network Rack"
+}

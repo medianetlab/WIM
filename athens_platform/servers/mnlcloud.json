@@ -1,0 +1,11 @@
+{
+    "type": "VIM",
+    "model": "R630",
+    "links": {
+        "eno4": {
+            "dst": "sdn-lab1",
+            "dst_port": 10
+        }
+    },
+    "location": "NCSRD - Europa Rack"
+}

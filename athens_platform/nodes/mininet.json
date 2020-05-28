@@ -1,0 +1,17 @@
+{
+    "type": "wan_emulator",
+    "model": "DELL R230",
+    "links": {
+        "1": {
+            "dst": "sdn-io",
+            "dst_port": 2,
+            "weight": 4
+        },
+        "2": {
+            "dst": "sdn-io",
+            "dst_port": 10,
+            "weight": 4
+        }
+    },
+    "location": "NCSRD - Io Rack"
+}

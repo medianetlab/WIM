@@ -1,0 +1,24 @@
+{
+    "type": "sdn",
+    "model": "DELL N2024",
+    "links": {
+        "2": {
+            "dst": "sdn-lab1",
+            "dst_port": 2,
+            "weight": 1
+        },
+        "4": {
+            "dst": "sdn-io-br0",
+            "dst_port": 1,
+            "weight": 1
+        },
+        "5": {
+            "dst": "sdn-io-br1",
+            "dst_port": 9,
+            "weight": 1
+        }
+    },
+    "location": "NCSRD - Network Rack",
+    "sdn_controller": "10.30.0.163",
+    "dpid": "openflow:84497306749996"
+}

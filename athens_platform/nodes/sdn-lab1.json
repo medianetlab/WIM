@@ -1,0 +1,19 @@
+{
+    "type": "sdn",
+    "model": "HP-3500",
+    "links": {
+        "2": {
+            "dst": "sdn-lab2",
+            "dst_port": 2,
+            "weight": 1
+        },
+        "1": {
+            "dst": "sw-lab-core",
+            "dst_port": 30,
+            "weight": 1
+        }
+    },
+    "location": "NCSRD - Network Rack",
+    "sdn_controller": "10.30.0.163",
+    "dpid": "openflow:844658893906663296"
+}

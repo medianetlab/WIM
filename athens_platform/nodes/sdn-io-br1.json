@@ -1,0 +1,19 @@
+{
+    "type": "sdn",
+    "model": "PICA8",
+    "links": {
+        "9": {
+            "dst": "sdn-lab2",
+            "dst_port": 5,
+            "weight": 1
+        },
+        "10": {
+            "dst": "mininet",
+            "dst_port": 2,
+            "weight": 1
+        }
+    },
+    "location": "NCSRD - Io Rack",
+    "sdn_controller": "10.30.0.163",
+    "dpid": "openflow:10308256236310757408"
+}

@@ -1,0 +1,27 @@
+{
+    "type": "sdn",
+    "model": "PICA8",
+    "links": {
+        "1": {
+            "dst": "sdn-lab2",
+            "dst_port": 4,
+            "weight": 1
+        },
+        "2": {
+            "dst": "mininet",
+            "dst_port": 1,
+            "weight": 4
+        },
+        "9": {
+            "dst": "sdn-lab2",
+            "dst_port": 5,
+            "weight": 1
+        },
+        "10": {
+            "dst": "mininet",
+            "dst_port": 2,
+            "weight": 1
+        }
+    },
+    "location": "NCSRD - Io Rack"
+}
