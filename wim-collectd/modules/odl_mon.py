@@ -1,9 +1,9 @@
 import collectd
+import random
 
 
 def read_func():
-    with open("/opt/collectd_plugins/example") as f:
-        value = f.read().strip()
+    value = random.randint(0, 1000)
 
     value = int(value)
     val = collectd.Values(type="gauge")

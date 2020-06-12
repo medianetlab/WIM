@@ -4,4 +4,6 @@ COPY requirements.txt /requirements.txt
 
 RUN pip install -r /requirements.txt
 
-CMD ["ls", "-l", "/opt/metrics/"]
+COPY prom-exporter/ /prom-exporter
+
+CMD ["python", "/prom-exporter/exporter.py"]

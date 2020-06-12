@@ -109,6 +109,8 @@ services:
     build: ./wim-prom-exporter
     container_name: wim-prom-exporter
     restart: always
+    ports:
+      - "8888:8888"
     volumes:
       - "./metrics:/opt/metrics"
 
