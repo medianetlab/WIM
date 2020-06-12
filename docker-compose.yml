@@ -112,7 +112,7 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - "./metrics:/opt/metrics"
+      - "metrics:/opt/metrics"
 
   wim-collectd:
     image: wim-collectd
@@ -123,7 +123,7 @@ services:
     tty: true
     volumes: 
       - "./wim-collectd/modules:/opt/collectd_plugins"
-      - "./metrics:/opt/metrics"
+      - "metrics:/opt/metrics"
     command: collectd -f
 
 volumes:
@@ -136,3 +136,4 @@ volumes:
   zk-secrets: {}
   kafka-data: {}
   kafka-secrets: {}
+  metrics: {}
