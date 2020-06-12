@@ -122,3 +122,4 @@ dmypy.json
 .vscode/
 pyrightconfig.json
 dev/
+metrics/
