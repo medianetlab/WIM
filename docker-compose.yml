@@ -114,18 +114,6 @@ services:
     volumes:
       - "metrics:/opt/metrics"
 
-  wim-collectd:
-    image: wim-collectd
-    container_name: wim-collectd
-    restart: always
-    build: ./wim-collectd
-    stdin_open: true
-    tty: true
-    volumes: 
-      - "./wim-collectd/modules:/opt/collectd_plugins"
-      - "metrics:/opt/metrics"
-    command: collectd -f
-
 volumes:
   neo4j-logs: {}
   neo4j-data: {}
