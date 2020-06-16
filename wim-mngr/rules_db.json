@@ -1,15 +1,15 @@
 [
     {
-        "_id": "mnlcloud-minilab",
-        "source": "mnlcloud",
-        "dest": "amarisoft-eNB",
+        "_id": "mnl_cloud-minilab",
+        "source": "mnl_cloud",
+        "dest": "amarisoft_eNB",
         "rule": "mnlcloud-amar_enb-slow.py",
         "qos_level": 3
     },
     {
-        "_id": "minilab-mnlcloud",
-        "source": "amarisoft-eNB",
-        "dest": "mnlcloud",
+        "_id": "minilab-mnl_cloud",
+        "source": "amarisoft_eNB",
+        "dest": "mnl_cloud",
         "rule": "mnlcloud-amar_enb-slow.py",
         "qos_level": 5
     }

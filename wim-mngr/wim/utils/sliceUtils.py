@@ -6,6 +6,7 @@ Module that defines the wim manager slice functions
 
 import logging
 import subprocess
+import wim.utils
 
 from wim.utils import mongoUtils
 
@@ -64,9 +65,10 @@ def create_slice(slice_data):
             continue
         rule_file = rule["rule"]
         logger.info(f"Creating connection from {endpoints[0]} to {endpoints[1]}")
-        subprocess.run([f"wim/rules/{rule_file}", "create"])
+        subprocess.run([f"wim/rules/{rule_file}", "create", slice_data["_id"]])
         rules_list.append(rule_file)
         conn["rules"] = rule_file
+    slice_data = mongoUtils.get("slice", slice_data["_id"])
     slice_data["connections"] = connections
     mongoUtils.update("slice", slice_data["_id"], slice_data)
 
@@ -83,6 +85,6 @@ def delete_slice(slice_id):
         except KeyError:
             logger.info(f"Skipping {conn}")
             continue
-        subprocess.run([f"wim/rules/{rules}", "delete"])
+        subprocess.run([f"wim/rules/{rules}", "delete", slice_data["_id"]])
 
     mongoUtils.delete("slice", slice_id)
