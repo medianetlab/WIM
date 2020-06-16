@@ -31,7 +31,7 @@ def create_consumer(topic):
                 auto_offset_reset="earliest",
                 enable_auto_commit=True,
                 auto_commit_interval_ms=10000,
-                group_id="katana-mngr-group",
+                group_id="wimr-group",
                 value_deserializer=lambda x: json.loads(x.decode("utf-8")),
             )
         except errors.NoBrokersAvailable as KafkaError:
