@@ -44,3 +44,6 @@ echo "NEO4J_AUTH=neo4j/neo4j" > .env
 fi
 
 docker-compose up --build -d
+
+# Add the rules database
+./rules_db.sh update
