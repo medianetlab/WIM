@@ -1,15 +1,13 @@
-#!/usr/bin/env python
-
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 """
-Module that the base WIM manager process. It creates a KAFKA consumer
+Read the collected metrics and expose them to Prometheus
 """
 
 import logging
 
-from wim.utils.kafkaUtils import create_consumer, create_topic
-from wim.utils.sliceUtils import create_slice, delete_slice
+from prom_exporter.utils.kafkaUtils import create_consumer, create_topic
+from prometheus_client import Gauge, start_http_server
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -27,17 +25,17 @@ def start_manager():
     """
     # Create the topic
     create_topic("wan-slice")
-    create_topic("wan-monitoring")
 
     # Create the consumer
-    consumer = create_consumer("wan-slice")
+    consumer = create_consumer("wan-monitoring")
 
     # Wait for messages
     for message in consumer:
+        slice_data = message.value["slice_data"]
         if message.value["action"] == "create":
-            create_slice(message.value["data"])
+            logger.debug(f"New slice {slice_data}")
         elif message.value["action"] == "terminate":
-            delete_slice(message.value["data"])
+            logger.debug(f"Del slice {slice_data}")
 
 
 if __name__ == "__main__":

@@ -6,9 +6,9 @@ Module that defines the wim manager slice functions
 
 import logging
 import subprocess
-import wim.utils
 
 from wim.utils import mongoUtils
+from wim.utils.kafkaUtils import create_producer
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -72,6 +72,14 @@ def create_slice(slice_data):
     slice_data["connections"] = connections
     mongoUtils.update("slice", slice_data["_id"], slice_data)
 
+    # Send the slice_id to the monitoring module
+    # Create the Kafka Producer
+    producer = create_producer()
+    wim_message = {"action": "create", "slice_data": slice_data}
+    # Send the message
+    producer.send("wan-monitoring", value=wim_message)
+    logger.info("Updated monitoring module")
+
 
 def delete_slice(slice_id):
     """
@@ -86,5 +94,13 @@ def delete_slice(slice_id):
             logger.info(f"Skipping {conn}")
             continue
         subprocess.run([f"wim/rules/{rules}", "delete", slice_data["_id"]])
+
+    # Send the slice_id to the monitoring module
+    # Create the Kafka Producer
+    producer = create_producer()
+    wim_message = {"action": "terminate", "slice_data": slice_data}
+    # Send the message
+    producer.send("wan-monitoring", value=wim_message)
+    logger.info("Updated monitoring module")
 
     mongoUtils.delete("slice", slice_id)

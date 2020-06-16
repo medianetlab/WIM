@@ -1,9 +1,10 @@
 FROM python:3.7
 
-COPY requirements.txt /requirements.txt
+COPY . /prom_exporter
+WORKDIR /prom_exporter
 
-RUN pip install -r /requirements.txt
+RUN pip install -r requirements.txt
 
-COPY prom-exporter/ /prom-exporter
+ENV PYTHONPATH=/prom_exporter
 
-CMD ["python", "/prom-exporter/exporter.py"]
+CMD ["python", "prom_exporter/exporter.py"]
