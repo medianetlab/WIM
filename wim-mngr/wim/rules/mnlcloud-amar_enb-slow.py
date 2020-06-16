@@ -19,14 +19,26 @@ logger.addHandler(stream_handler)
 
 # The nodes that need to be modified
 NODE_LIST = [
-    {"switch-id": "sdn-lab1", "script": "sdn-lab1.sh", "flow_ids": ["genesis-normal"]},
+    {
+        "switch-id": "sdn-lab1",
+        "script": "sdn-lab1.sh",
+        "tables": [{"table-id": "1", "flows": ["genesis-normal"]}],
+    },
     {
         "switch-id": "sdn-lab2",
         "script": "sdn-lab2.sh",
-        "flow_ids": ["ip-slow2", "ip-slow3", "ip-slow4", "ip-slow5"],
+        "tables": [{"table-id": "25", "flows": ["ip-slow2", "ip-slow3", "ip-slow4", "ip-slow5"]}],
     },
-    {"switch-id": "sdn-io-br0", "script": "sdn-io-br0.sh", "flow_ids": ["p1to2", "p2to1"]},
-    {"switch-id": "sdn-io-br1", "script": "sdn-io-br1.sh", "flow_ids": ["p9to10", "p10to9"]},
+    {
+        "switch-id": "sdn-io-br0",
+        "script": "sdn-io-br0.sh",
+        "tables": [{"table-id": "0", "flows": ["p1to2", "p2to1"]}],
+    },
+    {
+        "switch-id": "sdn-io-br1",
+        "script": "sdn-io-br1.sh",
+        "tables": [{"table-id": "0", "flows": ["p9to10", "p10to9"]}],
+    },
 ]
 
 # Get neo4j credentials and create db instance
@@ -57,6 +69,8 @@ for node in NODE_LIST:
     except KeyError:
         logger.error(f"SDN Controller and DPID were not defined for node {node['swich-id']}")
         exit(9999)
+    node["switch-dpid"] = dpid
+    node["sdn-ctl"] = ctl
     subprocess.run(["bash", node["script"], "-c", ctl, "-d", dpid, action])
 
 # Update the slice information with the created SDN flows
