@@ -17,27 +17,43 @@ stream_handler.setFormatter(stream_formatter)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(stream_handler)
 
+# Get the action argument
+action = argv[1]
+
+# Get the slice id argument
+slice_id = argv[2]
+
 # The nodes that need to be modified
 NODE_LIST = [
     {
         "switch-id": "sdn-lab1",
         "script": "sdn-lab1.sh",
-        "tables": [{"table-id": "1", "flows": ["genesis-normal"]}],
+        "tables": [{"table-id": "1", "flows": [f"{slice_id}-genesis-normal"]}],
     },
     {
         "switch-id": "sdn-lab2",
         "script": "sdn-lab2.sh",
-        "tables": [{"table-id": "25", "flows": ["ip-slow2", "ip-slow3", "ip-slow4", "ip-slow5"]}],
+        "tables": [
+            {
+                "table-id": "25",
+                "flows": [
+                    f"{slice_id}-ip-slow2",
+                    f"{slice_id}-ip-slow3",
+                    f"{slice_id}-ip-slow4",
+                    f"{slice_id}-ip-slow5",
+                ],
+            }
+        ],
     },
     {
         "switch-id": "sdn-io-br0",
         "script": "sdn-io-br0.sh",
-        "tables": [{"table-id": "0", "flows": ["p1to2", "p2to1"]}],
+        "tables": [{"table-id": "0", "flows": [f"{slice_id}-p1to2", f"{slice_id}-p2to1"]}],
     },
     {
         "switch-id": "sdn-io-br1",
         "script": "sdn-io-br1.sh",
-        "tables": [{"table-id": "0", "flows": ["p9to10", "p10to9"]}],
+        "tables": [{"table-id": "0", "flows": [f"{slice_id}-p9to10", f"{slice_id}-p10to9"]}],
     },
 ]
 
@@ -47,12 +63,6 @@ if not neo4j_auth:
     raise ValueError("NEO4J_AUTH variable is not defined")
 username, password = neo4j_auth.split("/")
 db = Neo4j(uri="bolt://neo4j", user=username, password=password)
-
-# Get the action argument
-action = argv[1]
-
-# Get the slice id argument
-slice_id = argv[2]
 
 # Go to the rules directory
 os.chdir("wim/rules/mnlcloud-amar_enb-slow-bins")
@@ -71,7 +81,7 @@ for node in NODE_LIST:
         exit(9999)
     node["switch-dpid"] = dpid
     node["sdn-ctl"] = ctl
-    subprocess.run(["bash", node["script"], "-c", ctl, "-d", dpid, action])
+    subprocess.run(["bash", node["script"], "-c", ctl, "-d", dpid, "-f", slice_id, action])
 
 # Update the slice information with the created SDN flows
 slice_data = mongoUtils.get("slice", slice_id)

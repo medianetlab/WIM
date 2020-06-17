@@ -17,7 +17,7 @@
             "in-port": 10
         },
         "table_id": "0",
-        "id": "p10to9",
+        "id": "FLOW-ID",
         "hard-timeout": "0",
         "idle-timeout": "0",
         "flow-name": "p10to9",

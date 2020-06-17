@@ -18,6 +18,11 @@ dpid=$2
 shift
 shift
 ;;
+-f | --flowid)
+flowid=$2
+shift
+shift
+;;
 create)
 action="create"
 shift
@@ -27,15 +32,15 @@ action="delete"
 shift
 ;;
 *)
-printf "Wrong option %s \n%s < -d | --dpid SWITCH_DPID > < -c | --controller SDN_CONTROLLER_IP > < create/delete >\n" "$key" "$0"
+printf "Wrong option %s \n%s < -d | --dpid SWITCH_DPID > < -c | --controller SDN_CONTROLLER_IP > < -f | --flowid FLOWID > < create/delete >\n" "$key" "$0"
 exit 9999
 ;;
 esac
 done
 
-if [ -z "${dpid}" ] || [ -z "${action}" ] || [ -z "${ctl_url}" ];
+if [ -z "${dpid}" ] || [ -z "${action}" ] || [ -z "${ctl_url}" ] || [ -z "${flowid}" ];
 then
-printf "Set SDN Controller URL, switch DPID and action \n%s < -d | --dpid SWITCH_DPID > < -c | --controller SDN_CONTROLLER_IP > < create/delete >\n" "$0"
+printf "Set SDN Controller URL, switch DPID and action \n%s < -d | --dpid SWITCH_DPID > < -c | --controller SDN_CONTROLLER_IP > < -f | --flowid FLOWID > < create/delete >\n" "$0"
 exit 9999
 fi
 
@@ -109,12 +114,19 @@ http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dp
 sleep 3
 
 # Handle IP packets: ports 2<->4 and 5<->3 - Priority = 50 (lower than fast path in case of overwrite)
+
+# Change the flow-id in the of-flow data files
+sed -i "s/\"id\": \"FLOW-ID\"/\"id\": \"${flowid}-ip-slow2\"/g"  of-flows/sdn-lab2/ip-slow2.json
+sed -i "s/\"id\": \"FLOW-ID\"/\"id\": \"${flowid}-ip-slow3\"/g"  of-flows/sdn-lab2/ip-slow3.json
+sed -i "s/\"id\": \"FLOW-ID\"/\"id\": \"${flowid}-ip-slow4\"/g"  of-flows/sdn-lab2/ip-slow4.json
+sed -i "s/\"id\": \"FLOW-ID\"/\"id\": \"${flowid}-ip-slow5\"/g"  of-flows/sdn-lab2/ip-slow5.json
+
 curl -v -k -X PUT \
 --user "${ODL_AUTH}" \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
 -d @of-flows/sdn-lab2/ip-slow2.json \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow2
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow2"
 
 sleep 3
 
@@ -123,7 +135,7 @@ curl -v -k -X PUT \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
 -d @of-flows/sdn-lab2/ip-slow3.json \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow3
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow3"
 
 sleep 3
 
@@ -132,7 +144,7 @@ curl -v -k -X PUT \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
 -d @of-flows/sdn-lab2/ip-slow4.json \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow4
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow4"
 
 sleep 3
 
@@ -141,7 +153,14 @@ curl -v -k -X PUT \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
 -d @of-flows/sdn-lab2/ip-slow5.json \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow5
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow5"
+
+# Change the flow-id in the of-flow data files
+sed -i "s/\"id\": \"${flowid}-ip-slow2\"/\"id\": \"FLOW-ID\"/g"  of-flows/sdn-lab2/ip-slow2.json
+sed -i "s/\"id\": \"${flowid}-ip-slow3\"/\"id\": \"FLOW-ID\"/g"  of-flows/sdn-lab2/ip-slow3.json
+sed -i "s/\"id\": \"${flowid}-ip-slow4\"/\"id\": \"FLOW-ID\"/g"  of-flows/sdn-lab2/ip-slow4.json
+sed -i "s/\"id\": \"${flowid}-ip-slow5\"/\"id\": \"FLOW-ID\"/g"  of-flows/sdn-lab2/ip-slow5.json
+
 
 else
 
@@ -167,7 +186,7 @@ curl -v -k -X DELETE \
 --user "${ODL_AUTH}" \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow2
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow2"
 
 sleep 3
 
@@ -175,7 +194,7 @@ curl -v -k -X DELETE \
 --user "${ODL_AUTH}" \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow3
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow3"
 
 sleep 3
 
@@ -183,7 +202,7 @@ curl -v -k -X DELETE \
 --user "${ODL_AUTH}" \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow4
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow4"
 
 sleep 3
 
@@ -191,6 +210,6 @@ curl -v -k -X DELETE \
 --user "${ODL_AUTH}" \
 -H "Accept:application/json" \
 -H "Content-type: application/json" \
-http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/ip-slow5
+http://"${ctl_url}":8181/restconf/config/opendaylight-inventory:nodes/node/"${dpid}"/flow-node-inventory:table/60/flow/"${flowid}-ip-slow5"
 
 fi

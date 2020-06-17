@@ -23,7 +23,7 @@
             }
         },
         "table_id": "60",
-        "id": "ip-slow5",
+        "id": "FLOW-ID",
         "hard-timeout": "0",
         "idle-timeout": "0",
         "flow-name": "ip-slow5",

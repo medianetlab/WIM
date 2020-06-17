@@ -14,7 +14,7 @@
             }
         },
         "table_id": "1",
-        "id": "genesis-normal",
+        "id": "FLOW-ID",
         "cookie_mask": "30",
         "hard-timeout": "0",
         "cookie": "30",

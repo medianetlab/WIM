@@ -17,7 +17,7 @@
             "in-port": 2
         },
         "table_id": "0",
-        "id": "p2to1",
+        "id": "FLOW-ID",
         "hard-timeout": "0",
         "idle-timeout": "0",
         "flow-name": "p2to1",
