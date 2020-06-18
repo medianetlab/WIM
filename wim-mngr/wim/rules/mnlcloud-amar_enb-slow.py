@@ -35,7 +35,7 @@ NODE_LIST = [
         "script": "sdn-lab2.sh",
         "tables": [
             {
-                "table-id": "25",
+                "table-id": "60",
                 "flows": [
                     f"{slice_id}-ip-slow2",
                     f"{slice_id}-ip-slow3",

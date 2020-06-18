@@ -1,5 +1,6 @@
 import threading
 import logging
+import requests
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -16,13 +17,24 @@ class FlowThread(threading.Thread):
     Class that creates an object thread for each flow that must be monitored
     """
 
-    def __init__(self, switch_dpid, flow_id, table_id, sdn_controller, name=None):
+    def __init__(
+        self,
+        switch_dpid,
+        flow_id,
+        table_id,
+        sdn_controller,
+        user="admin",
+        passwd="admin",
+        name=None,
+    ):
         super().__init__(name=name)
         self.switch_dpid = switch_dpid
         self.flow_id = flow_id
         self.table_id = table_id
         self.sdn_controller = sdn_controller
         self._stop = threading.Event()
+        self.user = user
+        self.passwd = passwd
 
     def run(self):
         """
@@ -33,7 +45,17 @@ class FlowThread(threading.Thread):
                 f"http://{self.sdn_controller}:8181/restconf/operational/opendaylight-inventory:"
                 f"nodes/node/{self.switch_dpid}/table/{self.table_id}/flow/{self.flow_id}"
             )
+            headers = {"Accept": "Application/json"}
+            auth = (self.user, self.passwd)
             logger.debug(url)
+            flow_req = requests.get(url=url, headers=headers, auth=auth)
+            if flow_req.status_code == 200:
+                cur_bytes = flow_req.json()["flow-node-inventory:flow"][0][
+                    "opendaylight-flow-statistics:flow-statistics"
+                ]["byte-count"]
+                logger.debug(cur_bytes)
+            else:
+                logger.debug("error")
             self._stop.wait(timeout=20)
 
     def stopped(self):
