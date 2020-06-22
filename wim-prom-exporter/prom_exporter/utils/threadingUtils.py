@@ -2,6 +2,8 @@ import threading
 import logging
 import requests
 
+from prom_exporter.utils.collect import collect
+
 # Create the logger
 logger = logging.getLogger(__name__)
 stream_handler = logging.StreamHandler()
@@ -23,6 +25,7 @@ class FlowThread(threading.Thread):
         flow_id,
         table_id,
         sdn_controller,
+        slice_id,
         user="admin",
         passwd="admin",
         name=None,
@@ -53,7 +56,7 @@ class FlowThread(threading.Thread):
                 cur_bytes = flow_req.json()["flow-node-inventory:flow"][0][
                     "opendaylight-flow-statistics:flow-statistics"
                 ]["byte-count"]
-                logger.debug(cur_bytes)
+                collect(self.flow_id, cur_bytes)
             else:
                 logger.debug("error")
             self._stop.wait(timeout=20)

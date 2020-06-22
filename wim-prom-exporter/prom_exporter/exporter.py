@@ -11,7 +11,7 @@ import uuid
 from prom_exporter.utils.kafkaUtils import create_consumer, create_topic
 from prom_exporter.utils import mongoUtils
 from prom_exporter.utils import threadingUtils
-from prometheus_client import Gauge, start_http_server
+from prom_exporter.utils.collect import start_prom_exporter_server
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -38,6 +38,7 @@ def start_monitor(slice_data, thread_dict):
                     table_id=table["table-id"],
                     sdn_controller=node["sdn-ctl"],
                     name=thread_id,
+                    slice_id=slice_data["_id"],
                 )
                 new_thread.start()
                 new_thread_data = {
@@ -98,4 +99,5 @@ def start_manager():
 
 
 if __name__ == "__main__":
+    start_prom_exporter_server()
     start_manager()
