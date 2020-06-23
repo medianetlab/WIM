@@ -69,7 +69,6 @@ def stop_monitor(slice_data, thread_dict):
                 mongoUtils.delete("flows", thread["_id"])
                 term_thread = thread_dict[thread["_id"]]
                 term_thread.stop()
-                logger.debug(f"Thread {term_thread} terminated")
     thread_list = threading.enumerate()
 
 

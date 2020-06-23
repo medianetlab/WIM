@@ -37,9 +37,10 @@ class FlowThread(threading.Thread):
         self.sdn_controller = sdn_controller
         self._stop = threading.Event()
         self.user = user
+        self.slice_id = slice_id.replace("-", "_")
         self.passwd = passwd
-        self.metric_bytes = Gauge(flow_id.replace("-", "_"), "Bytes for the flow id")
-        self.metric_bytes.set(0)
+        self.metric_bytes = Gauge(flow_id.replace("-", "_"), "Bytes for the flow id", ["slice_id"])
+        self.metric_bytes.labels(self.slice_id).set(0)
 
     def run(self):
         """
@@ -57,7 +58,7 @@ class FlowThread(threading.Thread):
                 cur_bytes = flow_req.json()["flow-node-inventory:flow"][0][
                     "opendaylight-flow-statistics:flow-statistics"
                 ]["byte-count"]
-                self.metric_bytes.set(cur_bytes)
+                self.metric_bytes.labels(self.slice_id).set(cur_bytes)
             self._stop.wait(timeout=10)
 
     def stopped(self):
