@@ -9,6 +9,8 @@ then
     exit 0
 fi
 
+containers="zookeeper kafka neo4j wim-nbi wim-mngr wim-cli mongo"
+
 # Get the options
 while [[ $# -gt 0 ]]
 do
@@ -26,6 +28,10 @@ then
 fi
 shift
 ;;
+--monitoring)
+containers=""
+shift
+;;
 *)
 printf "Wrong option $key\n----------\n"
 printf "Usage:\n\tstart.sh [-p | --publish] [-h | --help]\nOptions:
@@ -41,9 +47,10 @@ done
 if [ ! -f .env ];
 then
 echo "NEO4J_AUTH=neo4j/neo4j" > .env
+echo "ODL_AUTH=admin:admin" >> .env
 fi
 
-docker-compose up --build -d
+docker-compose up --build -d ${containers}
 
 # Add the rules database
 ./rules_db.sh update
