@@ -2,7 +2,7 @@ import threading
 import logging
 import requests
 
-from prom_exporter.utils.collect import collect
+from prometheus_client import start_http_server, Gauge
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -38,6 +38,8 @@ class FlowThread(threading.Thread):
         self._stop = threading.Event()
         self.user = user
         self.passwd = passwd
+        self.metric_bytes = Gauge(flow_id.replace("-", "_"), "Bytes for the flow id")
+        self.metric_bytes.set(0)
 
     def run(self):
         """
@@ -50,16 +52,13 @@ class FlowThread(threading.Thread):
             )
             headers = {"Accept": "Application/json"}
             auth = (self.user, self.passwd)
-            logger.debug(url)
             flow_req = requests.get(url=url, headers=headers, auth=auth)
             if flow_req.status_code == 200:
                 cur_bytes = flow_req.json()["flow-node-inventory:flow"][0][
                     "opendaylight-flow-statistics:flow-statistics"
                 ]["byte-count"]
-                collect(self.flow_id, cur_bytes)
-            else:
-                logger.debug("error")
-            self._stop.wait(timeout=20)
+                self.metric_bytes.set(cur_bytes)
+            self._stop.wait(timeout=10)
 
     def stopped(self):
         """
@@ -72,3 +71,10 @@ class FlowThread(threading.Thread):
         Sets the _stop flag to True and stops the thread
         """
         self._stop.set()
+
+    @classmethod
+    def start_prom_exporter_server(cls):
+        """
+        Function starts the prometheus exporter http server
+        """
+        start_http_server(8888)

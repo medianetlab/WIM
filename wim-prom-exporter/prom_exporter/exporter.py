@@ -11,7 +11,7 @@ import uuid
 from prom_exporter.utils.kafkaUtils import create_consumer, create_topic
 from prom_exporter.utils import mongoUtils
 from prom_exporter.utils import threadingUtils
-from prom_exporter.utils.collect import start_prom_exporter_server
+from prom_exporter.utils.threadingUtils import FlowThread
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -99,5 +99,5 @@ def start_manager():
 
 
 if __name__ == "__main__":
-    start_prom_exporter_server()
+    FlowThread.start_prom_exporter_server()
     start_manager()
