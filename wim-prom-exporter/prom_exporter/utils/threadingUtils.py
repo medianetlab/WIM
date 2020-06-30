@@ -2,8 +2,6 @@ import threading
 import logging
 import requests
 
-from prometheus_client import start_http_server, Gauge
-
 # Create the logger
 logger = logging.getLogger(__name__)
 stream_handler = logging.StreamHandler()
@@ -26,6 +24,7 @@ class FlowThread(threading.Thread):
         table_id,
         sdn_controller,
         slice_id,
+        metric_bytes,
         user="admin",
         passwd="admin",
         name=None,
@@ -37,10 +36,10 @@ class FlowThread(threading.Thread):
         self.sdn_controller = sdn_controller
         self._stop = threading.Event()
         self.user = user
-        self.slice_id = slice_id.replace("-", "_")
+        self.slice_id = slice_id
         self.passwd = passwd
-        self.metric_bytes = Gauge(flow_id.replace("-", "_"), "Bytes for the flow id", ["slice_id"])
-        self.metric_bytes.labels(self.slice_id).set(0)
+        self.metric_bytes = metric_bytes
+        self.metric_bytes.labels(self.slice_id, self.flow_id.replace("-", "_")).set(0)
 
     def run(self):
         """
@@ -58,7 +57,9 @@ class FlowThread(threading.Thread):
                 cur_bytes = flow_req.json()["flow-node-inventory:flow"][0][
                     "opendaylight-flow-statistics:flow-statistics"
                 ]["byte-count"]
-                self.metric_bytes.labels(self.slice_id).set(cur_bytes)
+                self.metric_bytes.labels(self.slice_id, self.flow_id.replace("-", "_")).set(
+                    cur_bytes
+                )
             self._stop.wait(timeout=10)
 
     def stopped(self):
@@ -72,10 +73,3 @@ class FlowThread(threading.Thread):
         Sets the _stop flag to True and stops the thread
         """
         self._stop.set()
-
-    @classmethod
-    def start_prom_exporter_server(cls):
-        """
-        Function starts the prometheus exporter http server
-        """
-        start_http_server(8888)

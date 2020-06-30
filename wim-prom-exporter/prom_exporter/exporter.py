@@ -5,13 +5,14 @@ Read the collected metrics and expose them to Prometheus
 """
 
 import logging
-import threading
 import uuid
 
 from prom_exporter.utils.kafkaUtils import create_consumer, create_topic
 from prom_exporter.utils import mongoUtils
 from prom_exporter.utils import threadingUtils
 from prom_exporter.utils.threadingUtils import FlowThread
+
+from prometheus_client import start_http_server, Gauge
 
 # Create the logger
 logger = logging.getLogger(__name__)
@@ -28,6 +29,8 @@ def start_monitor(slice_data, thread_dict):
     Starts monitoring the defined flows in slice_data. Creates a thread for each flow.
     """
     slice_flows = slice_data["slice_flows"]
+    slice_id = slice_data["_id"].replace("-", "_")
+    metric_bytes = Gauge(slice_id + "_flows", "Bytes for the flow id", ["slice_id", "flow_id"])
     for node in slice_flows:
         for table in node["tables"]:
             for flow in table["flows"]:
@@ -38,7 +41,8 @@ def start_monitor(slice_data, thread_dict):
                     table_id=table["table-id"],
                     sdn_controller=node["sdn-ctl"],
                     name=thread_id,
-                    slice_id=slice_data["_id"],
+                    slice_id=slice_id,
+                    metric_bytes=metric_bytes,
                 )
                 new_thread.start()
                 new_thread_data = {
@@ -69,7 +73,6 @@ def stop_monitor(slice_data, thread_dict):
                 mongoUtils.delete("flows", thread["_id"])
                 term_thread = thread_dict[thread["_id"]]
                 term_thread.stop()
-    thread_list = threading.enumerate()
 
 
 def start_manager():
@@ -98,5 +101,5 @@ def start_manager():
 
 
 if __name__ == "__main__":
-    FlowThread.start_prom_exporter_server()
+    start_http_server(8888)
     start_manager()
