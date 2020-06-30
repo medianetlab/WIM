@@ -16,5 +16,11 @@ WIM is used as the WAN Infrastructure Manager for SDN Networks, interacting with
 ```
 
 * __-p | --publish__ : Expose Kafka Message Bus to external components
+* __-m | --monitoring__ : Start prometheus exporter module for collecting traffic metrics per flow
 
-> Before you start the wim, make sure to create a .env file containing a variable with the credentials for the Neo4j database, in the form `NEO4J_AUTH=username/password`. If no such file is created, the default username/passwords will be used (neo4j/neo4j)
+## Environmenta Varibles
+
+Before you start the wim, make sure to create a .env file containing a variable with the credentials for:
+
+* The Neo4j database, in the form `NEO4J_AUTH=username/password`. If no such file is created, the default username/passwords will be used (neo4j/neo4j)
+* OpenDayLight, in the form `ODL_AUTH=admin:admin`. If no such file is created, the default username/passwords will be used (admin/admin)

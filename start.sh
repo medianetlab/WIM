@@ -3,8 +3,9 @@
 # Check for help option
 if [[ " $@ " =~ " -h " ]] || [[ " $@ " =~ " --help " ]];
 then
-    printf "Usage:\n\tstart.sh [-p | --publish] [-h | --help]\nOptions:
+    printf "Usage:\n\tstart.sh [-p | --publish] [-m | --monitoring] [-h | --help]\nOptions:
     \t[-p | --publish] : Expose Kafka using WIM public IP
+    \t[-m | --monitoring] : Start prometheus exporter module
     \t[-h | --help] : Print this message and quit\n"
     exit 0
 fi
@@ -28,14 +29,15 @@ then
 fi
 shift
 ;;
---monitoring)
+-m | --monitoring)
 containers=""
 shift
 ;;
 *)
 printf "Wrong option $key\n----------\n"
-printf "Usage:\n\tstart.sh [-p | --publish] [-h | --help]\nOptions:
+printf "Usage:\n\tstart.sh [-p | --publish] [-m | --monitoring] [-h | --help]\nOptions:
 \t[-p | --publish] : Expose Kafka using WIM public IP
+\t[-m | --monitoring] : Start prometheus exporter module
 \t[-h | --help] : Print this message and quit\n"
 exit 9999
 ;;
