@@ -23,8 +23,13 @@ read -p "Expose Kafka Message Bus? (Y/n) " ans
 
 if [[ $ans != "n" ]];
 then
+    message="WIM host public IP"
     ip_list=$(hostname -I 2> /dev/null)
-    read -p "WIM host public IP (Available: $ip_list) >> " HOST_IP
+    if (( $? == 0 ));
+    then
+        message="${message} (Available: $ip_list)"
+    fi
+    read -p "${message} >> " HOST_IP
     export "DOCKER_HOST_IP=${HOST_IP}"
 fi
 shift

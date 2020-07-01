@@ -29,7 +29,7 @@ def start_monitor(slice_data, thread_dict):
     Starts monitoring the defined flows in slice_data. Creates a thread for each flow.
     """
     slice_flows = slice_data["slice_flows"]
-    slice_id = slice_data["_id"].replace("-", "_")
+    slice_id = "slice_" + slice_data["_id"].replace("-", "_")
     metric_bytes = Gauge(slice_id + "_flows", "Bytes for the flow id", ["slice_id", "flow_id"])
     for node in slice_flows:
         for table in node["tables"]:
