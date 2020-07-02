@@ -5,6 +5,7 @@ Module that defines the wim manager slice functions
 """
 
 import logging
+import os
 import subprocess
 
 from wim.utils import mongoUtils
@@ -72,13 +73,15 @@ def create_slice(slice_data):
     slice_data["connections"] = connections
     mongoUtils.update("slice", slice_data["_id"], slice_data)
 
-    # Send the slice_id to the monitoring module
-    # Create the Kafka Producer
-    producer = create_producer()
-    wim_message = {"action": "create", "slice_data": slice_data}
-    # Send the message
-    producer.send("wan-monitoring", value=wim_message)
-    logger.info("Updated monitoring module")
+    # Send the slice_id to the monitoring module if monitoring is enabled
+    wim_monitoring = os.getenv("WIM_MONITORING", None)
+    if wim_monitoring:
+        # Create the Kafka Producer
+        producer = create_producer()
+        wim_message = {"action": "create", "slice_data": slice_data}
+        # Send the message
+        producer.send("wan-monitoring", value=wim_message)
+        logger.info("Updated monitoring module")
 
 
 def delete_slice(slice_id):
@@ -96,11 +99,13 @@ def delete_slice(slice_id):
         subprocess.run([f"wim/rules/{rules}", "delete", slice_data["_id"]])
 
     # Send the slice_id to the monitoring module
-    # Create the Kafka Producer
-    producer = create_producer()
-    wim_message = {"action": "terminate", "slice_data": slice_data}
-    # Send the message
-    producer.send("wan-monitoring", value=wim_message)
-    logger.info("Updated monitoring module")
+    wim_monitoring = os.getenv("WIM_MONITORING", None)
+    if wim_monitoring:
+        # Create the Kafka Producer
+        producer = create_producer()
+        wim_message = {"action": "terminate", "slice_data": slice_data}
+        # Send the message
+        producer.send("wan-monitoring", value=wim_message)
+        logger.info("Updated monitoring module")
 
     mongoUtils.delete("slice", slice_id)

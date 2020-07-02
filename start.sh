@@ -36,6 +36,8 @@ shift
 ;;
 -m | --monitoring)
 containers=""
+# Add the monitoring variable
+sed -i 's/WIM_MONITORING=.*/WIM_MONITORING=True/' .env
 shift
 ;;
 *)

@@ -26,4 +26,7 @@ exit 9999
 esac
 done
 
+# Remove the monitoring variable
+sed -i 's/WIM_MONITORING=.*/WIM_MONITORING=/' .env
+
 docker-compose down $options
