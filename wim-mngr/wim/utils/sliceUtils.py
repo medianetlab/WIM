@@ -90,13 +90,15 @@ def delete_slice(slice_id):
     """
     logger.info(f"Terminating WAN Slice {slice_id}")
     slice_data = mongoUtils.get("slice", slice_id)
-    for conn in slice_data["connections"]:
-        try:
-            rules = conn["rules"]
-        except KeyError:
-            logger.info(f"Skipping {conn}")
-            continue
-        subprocess.run([f"wim/rules/{rules}", "delete", slice_data["_id"]])
+    connections = slice_data.get("connections", None)
+    if connections:
+        for conn in connections:
+            try:
+                rules = conn["rules"]
+            except KeyError:
+                logger.info(f"Skipping {conn}")
+                continue
+            subprocess.run([f"wim/rules/{rules}", "delete", slice_data["_id"]])
 
     # Send the slice_id to the monitoring module
     wim_monitoring = os.getenv("WIM_MONITORING", None)

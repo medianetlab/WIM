@@ -18,7 +18,7 @@ WIM is used as the WAN Infrastructure Manager for SDN Networks, interacting with
 * __-p | --publish__ : Expose Kafka Message Bus to external components
 * __-m | --monitoring__ : Start prometheus exporter module for collecting traffic metrics per flow
 
-## Environmenta Varibles
+## Environmental Variables
 
 Before you start the wim, make sure to create a .env file containing a variable with the credentials for:
 
