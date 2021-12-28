@@ -12,5 +12,33 @@
         "dest": "mnl_cloud",
         "rule": "mnlcloud-amar_enb-slow.py",
         "qos_level": 5
+    },
+    {
+        "_id": "neat-core3",
+        "source": "neat",
+        "dest": "vim_core_int3",
+        "rule": "wan_emulator.sh",
+        "qos_level": 2
+    },
+    {
+        "_id": "core3-neat",
+        "source": "vim_core_int3",
+        "dest": "neat",
+        "rule": "example.sh",
+        "qos_level": 2
+    },
+    {
+        "_id": "neat-core1",
+        "source": "neat",
+        "dest": "vim_core_int1",
+        "rule": "wan_emulator.sh",
+        "qos_level": 2
+    },
+    {
+        "_id": "core1-neat",
+        "source": "vim_core_int1",
+        "dest": "neat",
+        "rule": "example.sh",
+        "qos_level": 2
     }
 ]

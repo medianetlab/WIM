@@ -123,3 +123,10 @@ dmypy.json
 pyrightconfig.json
 dev/
 metrics/
+
+
+# .env file
+.env
+
+# SSH Keys
+*.key
